@@ -61,7 +61,7 @@ def run(args):
         os.mkdir(args.output_dir)
 
     with open(args.selected_categories, "r") as sc_file:
-        selected_categories = [line.strip('\n') for line in sc_file]
+        selected_categories = [line.strip('\n') for line in sc_file if line.strip('\n') != ""]
 
     if not selected_categories:
         print("no categories selected in input file.")
@@ -71,6 +71,7 @@ def run(args):
     video_ids_list = []
 
     for key, value in id_mapping_dict.items():
+        print("Fetching videos for '{}' category".format(key))
         err1, js_data = make_get_request(JS_FETCHER_BASE_URL+value.split("/")[-1]+".js")
         if err1:
             print("Error: {}, with retrieving JS data for category '{}', skipping".format(str(js_data),key))
