@@ -3,6 +3,7 @@ import re
 import requests
 import argparse
 import subprocess
+import multiprocessing
 
 JS_FETCHER_BASE_URL = "https://storage.googleapis.com/data.yt8m.org/2/j/v/"
 VIDEO_ID_FETCHER_BASE_URL = "https://storage.googleapis.com/data.yt8m.org/2/j/i/"
@@ -57,7 +58,7 @@ def run(args):
 
     if not os.path.exists(args.output_dir):
         print("creating output directory: {}".format(args.output_dir))
-        os.mkdir(args.output_dir)  
+        os.mkdir(args.output_dir)
 
     with open(args.selected_categories, "r") as sc_file:
         selected_categories = [line.strip('\n') for line in sc_file]
@@ -86,9 +87,9 @@ def run(args):
                 continue
             video_id = re.findall(r"[a-zA-Z0-9_-]{11}", id_data)[0]
             video_ids_list.append(video_id)
-        
+
         limit = 0
-        
+
         for vid in video_ids_list:
             output_path = args.output_dir + key.replace(" ","_") + "_" +"%(id)s.%(ext)s"
             err, _ = download_video_using_youtube_dl(vid, output_path)
@@ -96,7 +97,7 @@ def run(args):
                 limit += 1
                 print("Video id: {} downloaded successfully.".format(vid))
             else:
-                print("Video id: {} download unsuccessful.".format(vid))    
+                print("Video id: {} download unsuccessful.".format(vid))
             if limit == args.number_of_videos:
                 break
 
@@ -105,7 +106,6 @@ if __name__ == "__main__":
     parser.add_argument("-sc", "--selected_categories", type=str, required=True, help="Input txt file containing categories seperated by new line.")
     parser.add_argument("-o", "--output_dir", type=str, default="/tmp/yt8m_videos/", help="Output directory to store videos")
     parser.add_argument("-n", "--number_of_videos", type=int, default=10, help="Number of videos to be downloaded from each category.")
-    parser.add_argument("-m", "--multiprocess", type=bool, default=False, help="Enable multiprocessing for video id fetching.")
 
     args = parser.parse_args()
 
