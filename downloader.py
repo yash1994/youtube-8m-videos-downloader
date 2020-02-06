@@ -68,7 +68,6 @@ def run(args):
         return
 
     id_mapping_dict = get_knowledge_graph_id(selected_categories)
-    video_ids_list = []
 
     for key, value in id_mapping_dict.items():
         print("Fetching videos for '{}' category".format(key))
@@ -81,6 +80,7 @@ def run(args):
         tf_records_ids = tf_records_ids[:args.number_of_videos + 50] # keep more ids
         tf_records_ids_first_two_chars = [i[:2] for i in tf_records_ids]
 
+        video_ids_list = []
         for ids, two_char_ids in zip(tf_records_ids, tf_records_ids_first_two_chars):
             url = VIDEO_ID_FETCHER_BASE_URL + two_char_ids + "/" + ids + ".js"
             err2, id_data = make_get_request(url)
