@@ -92,7 +92,7 @@ def run(args):
         limit = 0
 
         for vid in video_ids_list:
-            output_path = args.output_dir + key.replace(" ","_") + "_" +"%(id)s.%(ext)s"
+            output_path = args.output_dir + key.replace(" ","_") + "##" +"%(id)s.%(ext)s"
             err, _ = download_video_using_youtube_dl(vid, output_path)
             if not err:
                 limit += 1
